@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   IconDashboard, IconCreditLine, IconInvoice, IconTransactions, IconContract,
@@ -86,9 +86,35 @@ function LanguagePicker() {
   );
 }
 
+// Desktop: when the sidebar is taller than the window, stick it by its bottom edge
+// (negative sticky top) so it scrolls only as far as Logi välja and then stays visible.
+function useStickySidebar(ref) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const update = () => {
+      const top = desktop.matches ? Math.min(0, window.innerHeight - el.offsetHeight) : 0;
+      el.style.setProperty('--sb-top', `${top}px`);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener('resize', update);
+    desktop.addEventListener('change', update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', update);
+      desktop.removeEventListener('change', update);
+    };
+  }, [ref]);
+}
+
 export default function Sidebar({ open, onNavigate, onLogout }) {
+  const ref = useRef(null);
+  useStickySidebar(ref);
   return (
-    <aside className={`sidebar ${open ? 'is-open' : ''}`}>
+    <aside ref={ref} className={`sidebar ${open ? 'is-open' : ''}`}>
       <div className="sidebar-logo">
         <Logo />
       </div>
