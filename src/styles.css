@@ -58,8 +58,9 @@ ul { list-style: none; margin: 0; padding: 0; }
   display: flex; flex-direction: column;
   padding: 40px 16px 24px;
   transform: translateX(-100%); transition: transform .25s ease;
-  overflow-y: auto;
+  overflow-y: auto; scrollbar-width: none;
 }
+.sidebar::-webkit-scrollbar { display: none; }
 .sidebar.is-open { transform: none; box-shadow: 0 10px 40px rgba(0,0,0,.15); }
 .sidebar-logo { padding: 0 20px 52px; }
 .sidebar-nav { flex: 1; }
@@ -324,12 +325,19 @@ ul { list-style: none; margin: 0; padding: 0; }
 /* ---------- Desktop ---------- */
 @media (min-width: 1024px) {
   .topbar, .scrim { display: none; }
+  /* Sidebar and content sit side by side in one page-level scroll.
+     The sidebar stays pinned while the window is tall enough to show it whole;
+     on short windows it simply scrolls away with the page (no inner scrollbar). */
+  .app { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); align-items: start; }
   .sidebar {
-    width: var(--sidebar-w); transform: none; box-shadow: none !important;
+    position: sticky; top: 0; bottom: auto; grid-column: 1; grid-row: 1;
+    width: var(--sidebar-w); height: 100vh; height: 100dvh; min-height: 780px;
+    overflow: visible; transform: none; box-shadow: none !important;
     padding: 44px 16px 74px 40px;
   }
+  .main { grid-column: 2; grid-row: 1; }
   .sidebar-logo { padding: 0 0 52px 20px; }
-  .main { margin-left: var(--sidebar-w); padding: 48px 40px 24px; }
+  .main { padding: 48px 40px 24px; }
   .how-grid { gap: 32px; }
   .section-title { font-size: 24px; margin: 72px 0 24px; }
   .balance-amount { font-size: 44px; }
@@ -338,4 +346,9 @@ ul { list-style: none; margin: 0; padding: 0; }
   .chat-fab { right: 24px; bottom: 24px; }
   .chat-panel { right: 24px; bottom: 96px; }
   .a11y-fab { display: grid; }
+}
+
+/* Short desktop windows: the whole sidebar can't fit, so let it scroll with the page */
+@media (min-width: 1024px) and (max-height: 779px) {
+  .sidebar { position: relative; height: auto; min-height: 100vh; padding-bottom: 32px; }
 }
