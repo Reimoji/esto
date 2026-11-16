@@ -18,6 +18,9 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+/* Never allow sideways scrolling of the page. Set on body only, so it applies
+   to the viewport and doesn't break the sticky sidebar. */
+body { overflow-x: hidden; overscroll-behavior-x: none; }
 body {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
