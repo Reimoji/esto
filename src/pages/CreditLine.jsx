@@ -253,6 +253,7 @@ export default function CreditLine({ state, setState, toast }) {
       />
       <VirtualCardPromo
         state={state}
+        toast={toast}
         onApply={() => setModal('apply')}
         onOpenCard={(design) => {
           const { number, cvc } = randomCardDetails();

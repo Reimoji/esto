@@ -101,8 +101,43 @@ function OpenCardModal({ onClose, onSign }) {
   );
 }
 
+/* ---------- Wallet buttons (demo look-alikes of the official badges) ---------- */
+const GoogleWalletIcon = () => (
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden>
+    <rect x="3" y="5" width="26" height="22" rx="5" fill="#1a73e8" />
+    <path d="M3 13.5q0-4 5-4h16q5 0 5 4v2H3z" fill="#ea4335" />
+    <path d="M3 17q0-4 5-4h16q5 0 5 4v2H3z" fill="#fbbc04" />
+    <path d="M3 20.5q0-4 5-4h16q5 0 5 4V22a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z" fill="#34a853" />
+  </svg>
+);
+const AppleWalletIcon = () => (
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden>
+    <rect x="3" y="4" width="26" height="24" rx="5" fill="#e5e2da" />
+    <rect x="5" y="6" width="22" height="5" rx="1.5" fill="#3d8bd9" />
+    <rect x="5" y="9.5" width="22" height="5" rx="1.5" fill="#4cb860" />
+    <rect x="5" y="13" width="22" height="5" rx="1.5" fill="#f5b63c" />
+    <rect x="5" y="16.5" width="22" height="5" rx="1.5" fill="#ef5a3c" />
+    <path d="M3 19h8.5c1 0 1.6.6 2 1.4.6 1.2 1.4 1.8 2.5 1.8s1.9-.6 2.5-1.8c.4-.8 1-1.4 2-1.4H29v4a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z" fill="#d9d5cb" />
+  </svg>
+);
+
+function WalletButtons({ onAdd }) {
+  return (
+    <div className="vactive-wallets">
+      <button className="wallet-btn" onClick={() => onAdd('Apple Wallet')}>
+        <AppleWalletIcon />
+        <span><small>Add to</small>Apple Wallet</span>
+      </button>
+      <button className="wallet-btn" onClick={() => onAdd('Google Wallet')}>
+        <GoogleWalletIcon />
+        <span><small>Add to</small>Google Wallet</span>
+      </button>
+    </div>
+  );
+}
+
 /* ---------- Opened card: card left, details right (wallet-style) ---------- */
-function ActiveCard({ design, available, number, cvc }) {
+function ActiveCard({ design, available, number, cvc, toast }) {
   const [details, setDetails] = useState(false);
   const last4 = number.slice(-4);
   return (
@@ -123,6 +158,7 @@ function ActiveCard({ design, available, number, cvc }) {
           <Link to="/tehingud" className="btn btn-gray btn-sm">Tehingud</Link>
         </div>
       </div>
+      <WalletButtons onAdd={(w) => toast(`Kaart lisatud: ${w}`)} />
       {details && (
         <Modal title="Kaardi andmed" onClose={() => setDetails(false)}>
           <div className="modal-body">
@@ -141,7 +177,7 @@ function ActiveCard({ design, available, number, cvc }) {
   );
 }
 
-export default function VirtualCardPromo({ state, onApply, onOpenCard }) {
+export default function VirtualCardPromo({ state, onApply, onOpenCard, toast }) {
   const [modal, setModal] = useState(null);
   const signed = state.signed;
   // Modals live outside the box, so the Ava kaart success step survives the box
@@ -149,7 +185,7 @@ export default function VirtualCardPromo({ state, onApply, onOpenCard }) {
   return (
     <>
     {state.card ? (
-      <ActiveCard design={state.card} number={state.cardNumber} cvc={state.cardCvc} available={state.limit - state.used} />
+      <ActiveCard design={state.card} number={state.cardNumber} cvc={state.cardCvc} available={state.limit - state.used} toast={toast} />
     ) : (
     <section className="card vpromo">
       <span className="ribbon">Uus</span>
