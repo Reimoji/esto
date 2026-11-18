@@ -1,41 +1,14 @@
 import { useState } from 'react';
 import Modal from './Modal.jsx';
 
-/* Card artwork: deep ESTO green, a cream "track" with a green inset and a
-   golden slider bar, after the "Rahastus, mis liugleb sinu suunas" campaign. */
-export function VirtualCard({ className = '' }) {
+/* Card designs: dark (front, matches esto.ee), green (self-service) and light. */
+export function VirtualCard({ variant = 'dark', className = '' }) {
   return (
-    <div className={`vcard ${className}`} aria-hidden>
-      <svg className="vcard-art" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <radialGradient id="vc-bg" cx="70%" cy="20%" r="95%">
-            <stop offset="0" stopColor="#13886a" />
-            <stop offset=".55" stopColor="#0b6450" />
-            <stop offset="1" stopColor="#063f33" />
-          </radialGradient>
-          <linearGradient id="vc-track" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#fbf8f1" />
-            <stop offset="1" stopColor="#e3dccd" />
-          </linearGradient>
-          <linearGradient id="vc-gold" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#f6b73c" />
-            <stop offset="1" stopColor="#df9418" />
-          </linearGradient>
-        </defs>
-        <rect width="320" height="200" fill="url(#vc-bg)" />
-        <g transform="translate(192 98) rotate(-24)">
-          <rect x="-82" y="-34" width="300" height="68" rx="34" fill="url(#vc-track)" />
-          <rect x="-66" y="-20" width="110" height="40" rx="20" fill="#0f7a5d" />
-          <rect x="40" y="-15" width="62" height="13" rx="6.5" fill="url(#vc-gold)" />
-          <rect x="52" y="4" width="62" height="13" rx="6.5" fill="url(#vc-gold)" />
-        </g>
-      </svg>
+    <div className={`vcard vcard--${variant} ${className}`} aria-hidden>
       <span className="vcard-logo">esto</span>
-      <svg className="vcard-nfc" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-        <path d="M8.5 8.5a5 5 0 0 1 0 7M12 6a8.5 8.5 0 0 1 0 12M15.5 3.5a12 12 0 0 1 0 17" />
-      </svg>
-      <span className="vcard-label">Virtuaalkaart</span>
-      <span className="vcard-num">•••• 2026</span>
+      <span className="vcard-num">•••• 4821</span>
+      <span className="vcard-label">Krediidiliin</span>
+      <span className="vcard-visa">VISA</span>
     </div>
   );
 }
@@ -64,9 +37,9 @@ export default function VirtualCardPromo({ onApply }) {
       </div>
       <div className="vpromo-visual">
         <div className="vcard-stack">
-          <span className="vcard-back vcard-back-2" />
-          <span className="vcard-back vcard-back-1" />
-          <VirtualCard />
+          <VirtualCard variant="light" className="vcard-back vcard-back-2" />
+          <VirtualCard variant="green" className="vcard-back vcard-back-1" />
+          <VirtualCard variant="dark" className="vcard-front" />
         </div>
       </div>
 
@@ -83,7 +56,7 @@ export default function VirtualCardPromo({ onApply }) {
               <li><span>Intress esimesed 30 päeva</span><strong>0%</strong></li>
               <li><span>Maksad</span><strong>Ainult kasutatud summa eest</strong></li>
             </ul>
-            <p className="muted small">Virtuaalkaart on saadaval pärast krediidiliini lepingu allkirjastamist.</p>
+            <p className="muted small">Ava kaart pärast krediidiliini lepingu allkirjastamist.</p>
             <button className="btn btn-green btn-block" onClick={() => { setDetails(false); onApply(); }}>
               Esita taotlus
             </button>
