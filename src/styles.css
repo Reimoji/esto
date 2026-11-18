@@ -256,6 +256,33 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .vcard-modal { max-width: 300px; margin: 4px auto 6px; }
 
+.vpromo-cta { margin-top: 20px; }
+.btn-gray { background: #eceef0; color: var(--text); }
+.btn-gray:hover { background: #e2e5e8; }
+.text-link { color: var(--text); text-decoration: underline; text-underline-offset: 2px; font-weight: 500; }
+
+/* Design picker in Ava kaart */
+.design-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: -4px; }
+.design-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 8px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 13px; font-weight: 500;
+  transition: border-color .15s, background .15s;
+}
+.design-opt:hover { background: var(--hover); }
+.design-opt.active { border-color: var(--green); background: #effaf3; }
+.vcard-thumb { border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+.vcard-thumb .vcard-meta, .vcard-thumb .vcard-nfc { display: none; }
+
+/* Opened card */
+.vactive { margin-top: 24px; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.vactive-card { max-width: 320px; }
+.vactive-info { flex: 1; min-width: 0; }
+.vactive-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.vactive-rows { display: grid; grid-template-columns: auto 1fr; gap: 8px 24px; margin: 14px 0 0; font-size: 14.5px; }
+.vactive-rows dt { color: var(--muted); }
+.vactive-rows dd { margin: 0; font-weight: 500; font-variant-numeric: tabular-nums; }
+.vactive-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
 /* ---------- How it works ---------- */
 .how-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .how-card { padding: 24px; display: flex; flex-direction: column; }
@@ -397,6 +424,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 /* ---------- Tablet ---------- */
 @media (min-width: 640px) {
+  .vactive { flex-direction: row; align-items: center; gap: 32px; padding: 24px; }
+  .vactive-card { flex: 0 0 300px; }
   .vpromo { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 24px 24px; }
   .vpromo-text { flex: 1; min-width: 0; }
   .vpromo-visual { flex: 0 0 auto; width: 44%; max-width: 320px; padding: 0 12px 0 0; }

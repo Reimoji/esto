@@ -251,7 +251,11 @@ export default function CreditLine({ state, setState, toast }) {
         onApply={() => setModal('apply')}
         onWithdraw={() => setModal('withdraw')}
       />
-      {!state.signed && <VirtualCardPromo onApply={() => setModal('apply')} />}
+      <VirtualCardPromo
+        state={state}
+        onApply={() => setModal('apply')}
+        onOpenCard={(design) => setState((s) => ({ ...s, card: design }))}
+      />
       <HowItWorks />
       <Faq />
       {modal === 'apply' && (

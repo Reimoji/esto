@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Modal from './Modal.jsx';
+import { IconCheck } from './Icons.jsx';
+import { eur } from '../format.js';
 
 /* Card designs (A · Midnight front, B · Emerald, C · Stone). Wordmark and Visa
    mark are placeholders for the official assets. */
@@ -31,9 +34,122 @@ export function VirtualCard({ variant = 'midnight', className = '' }) {
   );
 }
 
-export default function VirtualCardPromo({ onApply }) {
+const DESIGNS = [
+  { id: 'midnight', label: 'Tume' },
+  { id: 'emerald', label: 'Roheline' },
+  { id: 'stone', label: 'Hele' },
+];
+
+const Arrow = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M4 12h16M14 6l6 6-6 6" />
+  </svg>
+);
+
+// Demo card details: valid for three years from today.
+const expiry = (() => {
+  const d = new Date();
+  return `${String(d.getMonth() + 1).padStart(2, '0')}/${String((d.getFullYear() + 3) % 100).padStart(2, '0')}`;
+})();
+
+/* ---------- Ava kaart: pick a design, sign with Smart-ID ---------- */
+function OpenCardModal({ onClose, onSign }) {
+  const [step, setStep] = useState(0);
+  const [design, setDesign] = useState('midnight');
+  return (
+    <Modal title={step === 1 ? 'Kaart avatud' : 'Ava virtuaalkaart'} onClose={onClose}>
+      {step === 0 && (
+        <div className="modal-body">
+          <VirtualCard variant={design} className="vcard-modal" />
+          <span className="field-label">Vali kaardi kujundus</span>
+          <div className="design-picker" role="radiogroup" aria-label="Kaardi kujundus">
+            {DESIGNS.map((d) => (
+              <button
+                key={d.id}
+                role="radio"
+                aria-checked={design === d.id}
+                className={`design-opt ${design === d.id ? 'active' : ''}`}
+                onClick={() => setDesign(d.id)}
+              >
+                <VirtualCard variant={d.id} className="vcard-thumb" />
+                <span>{d.label}</span>
+              </button>
+            ))}
+          </div>
+          <ul className="facts">
+            <li><span>Kaart</span><strong>Virtuaalne</strong></li>
+            <li><span>Seotud</span><strong>Krediidiliin</strong></li>
+            <li><span>Allkirjastamine</span><strong>Smart-ID</strong></li>
+          </ul>
+          <p className="muted small">
+            Kaardi avamisega nõustud kaardi kasutamise tingimustega.{' '}
+            <a href="#" className="text-link" onClick={(e) => e.preventDefault()}>Sätted ja tingimused</a>
+          </p>
+          <button className="btn btn-green btn-block" onClick={() => { onSign(design); setStep(1); }}>
+            Allkirjasta leping
+          </button>
+        </div>
+      )}
+      {step === 1 && (
+        <div className="modal-body center">
+          <div className="success-icon"><IconCheck /></div>
+          <p>Sinu virtuaalkaart on avatud. Lisa see Apple Pay või Google Pay rakendusse ja maksa kohe.</p>
+          <button className="btn btn-black btn-block" onClick={onClose}>Valmis</button>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+/* ---------- Opened card: card left, details right (wallet-style) ---------- */
+function ActiveCard({ design, available }) {
   const [details, setDetails] = useState(false);
   return (
+    <section className="card vactive">
+      <VirtualCard variant={design} className="vactive-card" />
+      <div className="vactive-info">
+        <div className="vactive-head">
+          <h2 className="vpromo-title">Virtuaalkaart</h2>
+          <span className="tag">Krediidiliin</span>
+        </div>
+        <dl className="vactive-rows">
+          <dt>Kaardi number</dt><dd>•••• •••• •••• 4821</dd>
+          <dt>Kehtib kuni</dt><dd>{expiry}</dd>
+          <dt>Vaba limiit</dt><dd>{eur(available)}</dd>
+        </dl>
+        <div className="vactive-actions">
+          <button className="btn btn-gray btn-sm" onClick={() => setDetails(true)}>Kaardi andmed</button>
+          <Link to="/tehingud" className="btn btn-gray btn-sm">Tehingud</Link>
+        </div>
+      </div>
+      {details && (
+        <Modal title="Kaardi andmed" onClose={() => setDetails(false)}>
+          <div className="modal-body">
+            <VirtualCard variant={design} className="vcard-modal" />
+            <ul className="facts">
+              <li><span>Kaardi number</span><strong>•••• •••• •••• 4821</strong></li>
+              <li><span>Kehtib kuni</span><strong>{expiry}</strong></li>
+              <li><span>CVC</span><strong>•••</strong></li>
+              <li><span>Vaba limiit</span><strong>{eur(available)}</strong></li>
+            </ul>
+            <p className="muted small">Kaardiga tehtud maksed vähendavad krediidiliini vaba limiiti.</p>
+          </div>
+        </Modal>
+      )}
+    </section>
+  );
+}
+
+export default function VirtualCardPromo({ state, onApply, onOpenCard }) {
+  const [modal, setModal] = useState(null);
+  const signed = state.signed;
+  // Modals live outside the box, so the Ava kaart success step survives the box
+  // switching to the opened-card layout.
+  return (
+    <>
+    {state.card ? (
+      <ActiveCard design={state.card} available={state.limit - state.used} />
+    ) : (
     <section className="card vpromo">
       <span className="ribbon">Uus</span>
       <div className="vpromo-text">
@@ -46,12 +162,11 @@ export default function VirtualCardPromo({ onApply }) {
           <span className="pill">Google Pay</span>
           <span className="pill">E-poed</span>
         </div>
-        <button className="vpromo-more" onClick={() => setDetails(true)}>
-          Vaata lähemalt
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M4 12h16M14 6l6 6-6 6" />
-          </svg>
-        </button>
+        {signed ? (
+          <button className="btn btn-green vpromo-cta" onClick={() => setModal('open')}>Ava kaart</button>
+        ) : (
+          <button className="vpromo-more" onClick={() => setModal('details')}>Vaata lähemalt <Arrow /></button>
+        )}
       </div>
       <div className="vpromo-visual">
         <div className="vcard-stack">
@@ -60,9 +175,11 @@ export default function VirtualCardPromo({ onApply }) {
           <VirtualCard variant="midnight" className="vcard-front" />
         </div>
       </div>
+    </section>
+    )}
 
-      {details && (
-        <Modal title="Virtuaalkaart" onClose={() => setDetails(false)}>
+      {modal === 'details' && (
+        <Modal title="Virtuaalkaart" onClose={() => setModal(null)}>
           <div className="modal-body">
             <VirtualCard className="vcard-modal" />
             <p className="muted">
@@ -75,12 +192,13 @@ export default function VirtualCardPromo({ onApply }) {
               <li><span>Maksad</span><strong>Ainult kasutatud summa eest</strong></li>
             </ul>
             <p className="muted small">Ava kaart pärast krediidiliini lepingu allkirjastamist.</p>
-            <button className="btn btn-green btn-block" onClick={() => { setDetails(false); onApply(); }}>
+            <button className="btn btn-green btn-block" onClick={() => { setModal(null); onApply(); }}>
               Esita taotlus
             </button>
           </div>
         </Modal>
       )}
-    </section>
+      {modal === 'open' && <OpenCardModal onClose={() => setModal(null)} onSign={onOpenCard} />}
+    </>
   );
 }
