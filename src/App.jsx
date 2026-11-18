@@ -6,7 +6,7 @@ import CreditLine from './pages/CreditLine.jsx';
 import { Placeholder, Dashboard } from './pages/Placeholder.jsx';
 
 const INITIAL = { signed: false, used: 0, limit: 2000 };
-const KEY = 'esto-demo-state';
+const KEY = 'esto-demo-state-v2'; // bump to reset everyone's saved demo state
 
 function load() {
   try {
