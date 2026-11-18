@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from '../components/Modal.jsx';
+import VirtualCardPromo from '../components/VirtualCardPromo.jsx';
 import { Cursor, IconPlusCircle, IconCheck } from '../components/Icons.jsx';
 import { eur } from '../format.js';
 
@@ -250,6 +251,7 @@ export default function CreditLine({ state, setState, toast }) {
         onApply={() => setModal('apply')}
         onWithdraw={() => setModal('withdraw')}
       />
+      {!state.signed && <VirtualCardPromo onApply={() => setModal('apply')} />}
       <HowItWorks />
       <Faq />
       {modal === 'apply' && (

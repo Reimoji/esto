@@ -176,6 +176,66 @@ ul { list-style: none; margin: 0; padding: 0; }
 .promo-title { color: var(--green-text); font-size: 20px; line-height: 1.25; font-weight: 600; letter-spacing: -0.035em; }
 .balance-promo p { font-size: 15.5px; margin: 2px 0 16px; }
 
+/* ---------- Virtual card promo ---------- */
+.vpromo {
+  position: relative; overflow: hidden; margin-top: 24px;
+  display: flex; flex-direction: column-reverse; gap: 8px;
+  padding: 20px; background: linear-gradient(180deg, #fff 0%, #f6f8f7 100%);
+}
+.ribbon {
+  position: absolute; top: 15px; right: -36px; z-index: 2;
+  width: 132px; padding: 5px 0; transform: rotate(45deg);
+  background: var(--green-btn); color: #fff; text-align: center;
+  font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
+.vpromo-text { display: flex; flex-direction: column; align-items: flex-start; }
+.vpromo-title { font-size: 28px; font-weight: 800; letter-spacing: -0.045em; line-height: 1.05; }
+.vpromo-desc { font-size: 15.5px; line-height: 1.45; margin-top: 8px; max-width: 420px; }
+.vpromo-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.pill {
+  font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+  background: #e9ece9; color: #2a2f35;
+}
+.vpromo-more {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 22px;
+  font-size: 13.5px; font-weight: 600; color: var(--text);
+}
+.vpromo-more svg { transition: transform .15s; }
+.vpromo-more:hover svg { transform: translateX(3px); }
+.vpromo-visual { display: flex; justify-content: center; padding: 12px 0 8px; }
+
+.vcard-stack { position: relative; width: min(100%, 280px); aspect-ratio: 1.586; margin: 14px 10px 4px 0; }
+.vcard-back {
+  position: absolute; inset: 0; border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+.vcard-back-2 { transform: translate(14px, -14px) rotate(4deg); background: linear-gradient(135deg, #f6b73c, #e98f1c); }
+.vcard-back-1 { transform: translate(7px, -7px) rotate(2deg); background: linear-gradient(135deg, #3ee08a, #17b862); }
+.vcard {
+  position: relative; width: 100%; aspect-ratio: 1.586; border-radius: 14px; overflow: hidden;
+  color: #fff; box-shadow: 0 12px 28px rgba(6, 63, 51, .28), 0 2px 6px rgba(0,0,0,.1);
+  transition: transform .25s ease;
+}
+.vcard-stack .vcard { position: absolute; inset: 0; }
+.vpromo:hover .vcard-stack .vcard { transform: translateY(-3px) rotate(-1deg); }
+.vcard-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.vcard-logo {
+  position: absolute; top: 12%; left: 8%;
+  font-size: 26px; font-weight: 600; letter-spacing: -0.04em; line-height: 1;
+}
+.vcard-nfc { position: absolute; top: 12%; right: 8%; width: 22px; height: 22px; opacity: .9; }
+.vcard-label {
+  position: absolute; left: 8%; bottom: 11%;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25);
+}
+.vcard-num {
+  position: absolute; right: 8%; bottom: 11%;
+  font-size: 12px; font-weight: 600; letter-spacing: .08em; color: rgba(255,255,255,.85);
+}
+.vcard-modal { max-width: 300px; margin: 4px auto 6px; }
+
 /* ---------- How it works ---------- */
 .how-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .how-card { padding: 24px; display: flex; flex-direction: column; }
@@ -317,6 +377,10 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 /* ---------- Tablet ---------- */
 @media (min-width: 640px) {
+  .vpromo { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 24px 24px; }
+  .vpromo-text { flex: 1; min-width: 0; }
+  .vpromo-visual { flex: 0 0 auto; width: 44%; max-width: 320px; padding: 0 12px 0 0; }
+  .vpromo-title { font-size: 34px; }
   .main { padding: 32px 24px 96px; }
   .how-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
   .balance-top { padding: 20px 24px 20px; }
