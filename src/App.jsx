@@ -1,16 +1,22 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar, { Logo } from './components/Sidebar.jsx';
 import { IconMenu, IconClose, IconGlasses } from './components/Icons.jsx';
 import CreditLine from './pages/CreditLine.jsx';
+import { randomCardDetails } from './format.js';
 import { Placeholder, Dashboard } from './pages/Placeholder.jsx';
 
-const INITIAL = { signed: false, used: 0, limit: 2000, card: null };
+const INITIAL = { signed: false, used: 0, limit: 2000, card: null, cardNumber: null, cardCvc: null };
 const KEY = 'esto-demo-state-v2'; // bump to reset everyone's saved demo state
 
 function load() {
   try {
-    return { ...INITIAL, ...JSON.parse(localStorage.getItem(KEY)) };
+    const s = { ...INITIAL, ...JSON.parse(localStorage.getItem(KEY)) };
+    if (s.card && !s.cardNumber) {
+      const { number, cvc } = randomCardDetails();
+      return { ...s, cardNumber: number, cardCvc: cvc };
+    }
+    return s;
   } catch {
     return INITIAL;
   }
@@ -56,6 +62,15 @@ export default function App() {
     setTimeout(() => setToastMsg(null), 3000);
   }, []);
 
+  const navigate = useNavigate();
+  const resetFlow = () => {
+    setState(INITIAL);
+    setMenuOpen(false);
+    navigate('/krediidiliin');
+    window.scrollTo(0, 0);
+    toast('Voog lähtestatud – alusta krediidiliini taotlusest');
+  };
+
   const logout = () => {
     setState(INITIAL);
     setMenuOpen(false);
@@ -64,6 +79,12 @@ export default function App() {
 
   return (
     <div className="app">
+      <button className="reset-flow" onClick={resetFlow} title="Alusta demo algusest">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" />
+        </svg>
+        Reset flow
+      </button>
       <header className="topbar">
         <Logo />
         <button className="icon-btn" onClick={() => setMenuOpen((o) => !o)} aria-label="Menüü">

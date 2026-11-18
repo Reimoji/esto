@@ -378,6 +378,22 @@ ul { list-style: none; margin: 0; padding: 0; }
   box-shadow: 0 8px 24px rgba(0,0,0,.2); animation: up .2s ease; max-width: calc(100vw - 32px);
 }
 
+/* Demo helper: reset the whole flow. Mobile: in the top bar, left of the menu button. */
+.reset-flow {
+  position: fixed; top: 12px; right: 64px; z-index: 35;
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px; padding: 0 14px; border-radius: 999px;
+  background: linear-gradient(180deg, #ef4444, #dc2626); color: #fff;
+  font-size: 13px; font-weight: 600; letter-spacing: -0.005em;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, .32), inset 0 1px 0 rgba(255,255,255,.2);
+  transition: transform .15s, box-shadow .15s, filter .15s;
+}
+.reset-flow:hover { filter: brightness(1.05); box-shadow: 0 6px 18px rgba(220, 38, 38, .4), inset 0 1px 0 rgba(255,255,255,.2); }
+.reset-flow:hover svg { transform: rotate(-120deg); }
+.reset-flow svg { transition: transform .35s ease; }
+.reset-flow:active { transform: scale(.97); }
+.mono { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+
 /* ---------- Modal ---------- */
 .modal-backdrop {
   position: fixed; inset: 0; z-index: 80; background: rgba(10,12,16,.45);
@@ -463,6 +479,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .chat-fab { right: 24px; bottom: 24px; }
   .chat-panel { right: 24px; bottom: 96px; }
   .a11y-fab { display: grid; }
+  .reset-flow { top: 10px; right: 20px; }
 }
 
 /* Short desktop windows: a little less space under Logi välja */

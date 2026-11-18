@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from './Modal.jsx';
 import { IconCheck } from './Icons.jsx';
-import { eur } from '../format.js';
+import { eur, formatCardNumber } from '../format.js';
 
 /* Card designs (A · Midnight front, B · Emerald, C · Stone). Wordmark and Visa
    mark are placeholders for the official assets. */
@@ -12,7 +12,7 @@ const Contactless = () => (
   </svg>
 );
 
-export function VirtualCard({ variant = 'midnight', className = '' }) {
+export function VirtualCard({ variant = 'midnight', className = '', last4 = '4821' }) {
   return (
     <div className={`vcard vcard--${variant} ${className}`} aria-hidden>
       <div className="vcard-body">
@@ -23,7 +23,7 @@ export function VirtualCard({ variant = 'midnight', className = '' }) {
       <div className="vcard-bottom">
         <div className="vcard-meta">
           <span className="vcard-kind">Virtuaalkaart · Krediidiliin</span>
-          <span className="vcard-num">•••• 4821</span>
+          <span className="vcard-num">•••• {last4}</span>
         </div>
         <span className="vcard-visa">VISA</span>
       </div>
@@ -102,18 +102,19 @@ function OpenCardModal({ onClose, onSign }) {
 }
 
 /* ---------- Opened card: card left, details right (wallet-style) ---------- */
-function ActiveCard({ design, available }) {
+function ActiveCard({ design, available, number, cvc }) {
   const [details, setDetails] = useState(false);
+  const last4 = number.slice(-4);
   return (
     <section className="card vactive">
-      <VirtualCard variant={design} className="vactive-card" />
+      <VirtualCard variant={design} last4={last4} className="vactive-card" />
       <div className="vactive-info">
         <div className="vactive-head">
           <h2 className="vpromo-title">Virtuaalkaart</h2>
           <span className="tag">Krediidiliin</span>
         </div>
         <dl className="vactive-rows">
-          <dt>Kaardi number</dt><dd>•••• •••• •••• 4821</dd>
+          <dt>Kaardi number</dt><dd>•••• •••• •••• {last4}</dd>
           <dt>Kehtib kuni</dt><dd>{expiry}</dd>
           <dt>Vaba limiit</dt><dd>{eur(available)}</dd>
         </dl>
@@ -125,11 +126,11 @@ function ActiveCard({ design, available }) {
       {details && (
         <Modal title="Kaardi andmed" onClose={() => setDetails(false)}>
           <div className="modal-body">
-            <VirtualCard variant={design} className="vcard-modal" />
+            <VirtualCard variant={design} last4={last4} className="vcard-modal" />
             <ul className="facts">
-              <li><span>Kaardi number</span><strong>•••• •••• •••• 4821</strong></li>
-              <li><span>Kehtib kuni</span><strong>{expiry}</strong></li>
-              <li><span>CVC</span><strong>•••</strong></li>
+              <li><span>Kaardi number</span><strong className="mono">{formatCardNumber(number)}</strong></li>
+              <li><span>Kehtib kuni</span><strong className="mono">{expiry}</strong></li>
+              <li><span>CVC</span><strong className="mono">{cvc}</strong></li>
               <li><span>Vaba limiit</span><strong>{eur(available)}</strong></li>
             </ul>
             <p className="muted small">Kaardiga tehtud maksed vähendavad krediidiliini vaba limiiti.</p>
@@ -148,7 +149,7 @@ export default function VirtualCardPromo({ state, onApply, onOpenCard }) {
   return (
     <>
     {state.card ? (
-      <ActiveCard design={state.card} available={state.limit - state.used} />
+      <ActiveCard design={state.card} number={state.cardNumber} cvc={state.cardCvc} available={state.limit - state.used} />
     ) : (
     <section className="card vpromo">
       <span className="ribbon">Uus</span>

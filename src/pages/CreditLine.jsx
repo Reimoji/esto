@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Modal from '../components/Modal.jsx';
 import VirtualCardPromo from '../components/VirtualCardPromo.jsx';
 import { Cursor, IconPlusCircle, IconCheck } from '../components/Icons.jsx';
-import { eur } from '../format.js';
+import { eur, randomCardDetails } from '../format.js';
 
 const FAQ = [
   {
@@ -254,7 +254,10 @@ export default function CreditLine({ state, setState, toast }) {
       <VirtualCardPromo
         state={state}
         onApply={() => setModal('apply')}
-        onOpenCard={(design) => setState((s) => ({ ...s, card: design }))}
+        onOpenCard={(design) => {
+          const { number, cvc } = randomCardDetails();
+          setState((s) => ({ ...s, card: design, cardNumber: number, cardCvc: cvc }));
+        }}
       />
       <HowItWorks />
       <Faq />
