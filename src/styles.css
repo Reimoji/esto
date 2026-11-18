@@ -274,8 +274,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 .vcard-thumb .vcard-meta, .vcard-thumb .vcard-nfc { display: none; }
 
 /* Opened card */
-.vactive { margin-top: 24px; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-.vactive-card { max-width: 320px; }
+.vactive { position: relative; margin-top: 24px; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.vactive-card { max-width: 340px; }
 .vactive-info { flex: 1; min-width: 0; }
 .vactive-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .vactive-rows { display: grid; grid-template-columns: auto 1fr; gap: 8px 24px; margin: 14px 0 0; font-size: 14.5px; }
@@ -283,17 +283,19 @@ ul { list-style: none; margin: 0; padding: 0; }
 .vactive-rows dd { margin: 0; font-weight: 500; font-variant-numeric: tabular-nums; }
 .vactive-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 
-.vactive-wallets { display: flex; flex-direction: column; gap: 10px; }
+/* Wallet buttons. Mobile: two side by side. */
+.vactive-wallets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .wallet-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  height: 48px; padding: 0 16px 0 12px; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 0;
+  height: 44px; padding: 0 10px; border-radius: 10px;
   background: #000; color: #fff; text-align: left;
   border: 1px solid #3a3a3c; transition: background .15s, transform .1s;
 }
 .wallet-btn:hover { background: #1c1c1e; }
 .wallet-btn:active { transform: scale(.98); }
-.wallet-btn span { display: flex; flex-direction: column; font-size: 16px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
-.wallet-btn small { font-size: 11.5px; font-weight: 500; opacity: .9; }
+.wallet-btn svg { width: 24px; height: 24px; flex-shrink: 0; }
+.wallet-btn span { display: flex; flex-direction: column; font-size: 13.5px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
+.wallet-btn small { font-size: 9.5px; font-weight: 500; opacity: .9; }
 
 /* ---------- How it works ---------- */
 .how-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
@@ -452,9 +454,15 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 /* ---------- Tablet ---------- */
 @media (min-width: 640px) {
-  .vactive { display: grid; grid-template-columns: 260px 1fr; align-items: center; gap: 20px 28px; padding: 24px; }
+  .vactive { display: grid; grid-template-columns: 280px 1fr; align-items: center; gap: 20px 32px; padding: 28px; }
   .vactive-card { grid-row: span 2; }
-  .vactive-wallets { flex-direction: row; flex-wrap: wrap; }
+  /* Krediidiliin tag back in the box's top-right corner */
+  .vactive-head .tag { position: absolute; top: 24px; right: 24px; }
+  .vactive-wallets { display: flex; gap: 8px; }
+  .wallet-btn { height: 38px; padding: 0 12px 0 9px; border-radius: 9px; gap: 7px; justify-content: flex-start; }
+  .wallet-btn svg { width: 21px; height: 21px; }
+  .wallet-btn span { font-size: 12.5px; }
+  .wallet-btn small { font-size: 8.5px; }
   .vpromo { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 24px 24px; }
   .vpromo-text { flex: 1; min-width: 0; }
   .vpromo-visual { flex: 0 0 auto; width: 44%; max-width: 320px; padding: 0 12px 0 0; }
@@ -502,8 +510,10 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 /* Wide screens: card | details | wallet buttons */
 @media (min-width: 1280px) {
-  .vactive { grid-template-columns: 280px 1fr auto; }
+  .vactive { grid-template-columns: 290px 1fr auto; padding: 32px; gap: 20px 28px; }
   .vactive-card { grid-row: auto; }
-  .vactive-wallets { flex-direction: column; }
-  .wallet-btn { width: 196px; }
+  .vactive-head .tag { top: 28px; right: 28px; }
+  .vactive-wallets { flex-direction: column; align-self: end; margin-bottom: 2px; }
+  .wallet-btn { width: 142px; }
+  .vactive-actions .btn { padding: 0 14px; }
 }

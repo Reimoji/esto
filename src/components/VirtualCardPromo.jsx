@@ -156,6 +156,7 @@ function ActiveCard({ design, available, number, cvc, toast }) {
         <div className="vactive-actions">
           <button className="btn btn-gray btn-sm" onClick={() => setDetails(true)}>Kaardi andmed</button>
           <Link to="/tehingud" className="btn btn-gray btn-sm">Tehingud</Link>
+          <button className="btn btn-gray btn-sm" onClick={() => {}}>Limiidid</button>
         </div>
       </div>
       <WalletButtons onAdd={(w) => toast(`Kaart lisatud: ${w}`)} />
